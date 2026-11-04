@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RocketFix Mobile Repair · Brevard County, FL</title>
+  <meta name="description" content="Mobile phone and tablet repair that comes to you across Brevard County. Screen, battery, charging port, and diagnostic repairs. Call or text 321-323-1815.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --navy-900: #071523;
+      --navy-800: #0B2A45;
+      --navy-700: #124A6A;
+      --panel: #081726;
+      --panel-2: #0C2135;
+      --teal: #39D5C8;
+      --orange: #FF7A1A;
+      --gold: #FFD166;
+      --ice: #B9D6EA;
+      --muted: #8FA9BE;
+      --white: #FFFFFF;
+      --line: rgba(57, 213, 200, 0.28);
+      --line-orange: rgba(255, 122, 26, 0.38);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #E8F4FF;
+      font-family: Arial, Helvetica, "Segoe UI", system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+      background:
+        radial-gradient(circle at 12% 6%, rgba(57, 213, 200, 0.10), transparent 42%),
+        radial-gradient(circle at 90% 94%, rgba(255, 122, 26, 0.10), transparent 45%),
+        linear-gradient(160deg, var(--navy-900) 0%, var(--navy-800) 55%, var(--navy-700) 100%);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Star field, matching the SVG backgrounds */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        radial-gradient(1.6px 1.6px at 8% 7%, rgba(185, 214, 234, 0.60), transparent 100%),
+        radial-gradient(1.2px 1.2px at 22% 14%, rgba(185, 214, 234, 0.45), transparent 100%),
+        radial-gradient(1.4px 1.4px at 38% 5%, rgba(185, 214, 234, 0.50), transparent 100%),
+        radial-gradient(1.3px 1.3px at 72% 9%, rgba(185, 214, 234, 0.45), transparent 100%),
+        radial-gradient(1.6px 1.6px at 91% 18%, rgba(185, 214, 234, 0.55), transparent 100%),
+        radial-gradient(1.1px 1.1px at 62% 26%, rgba(185, 214, 234, 0.35), transparent 100%),
+        radial-gradient(1.2px 1.2px at 15% 46%, rgba(185, 214, 234, 0.30), transparent 100%),
+        radial-gradient(1.4px 1.4px at 88% 55%, rgba(185, 214, 234, 0.30), transparent 100%),
+        radial-gradient(1.2px 1.2px at 6% 78%, rgba(185, 214, 234, 0.35), transparent 100%),
+        radial-gradient(1.5px 1.5px at 48% 92%, rgba(185, 214, 234, 0.30), transparent 100%),
+        radial-gradient(1.2px 1.2px at 94% 84%, rgba(185, 214, 234, 0.35), transparent 100%);
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 26px 18px 44px;
+    }
+
+    /* ---------- HEADER ---------- */
+    .site-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 6px;
+    }
+
+    .logo-mark {
+      width: 84px;
+      height: 84px;
+      flex: 0 0 84px;
+      filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.55));
+    }
+
+    .brand h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      line-height: 1;
+      color: var(--white);
+    }
+
+    .brand .brand-sub {
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-top: 8px;
+    }
+
+    .brand-rule {
+      width: 100%;
+      max-width: 300px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--orange);
+      margin: 12px 0 10px;
+    }
+
+    .brand .brand-area {
+      font-size: 0.86rem;
+      color: var(--ice);
+      letter-spacing: 0.02em;
+    }
+
+    /* ---------- CALL BAR ---------- */
+    .call-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 22px 0 16px;
+      padding: 12px 14px 12px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--line-orange);
+      background: linear-gradient(180deg, rgba(12, 33, 53, 0.95), rgba(8, 23, 38, 0.98));
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
+    }
+
+    .call-bar .call-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--teal);
+      white-space: nowrap;
+    }
+
+    .call-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: var(--navy-900);
+      border: 1px solid var(--line);
+      color: var(--gold);
+      font-size: 1.32rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .call-link i {
+      color: var(--orange);
+      font-size: 1rem;
+    }
+
+    .call-link:hover,
+    .call-link:focus-visible {
+      border-color: var(--orange);
+      transform: translateY(-1px);
+    }
+
+    /* ---------- TRUST BADGES ---------- */
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 26px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ice);
+      background: rgba(8, 23, 38, 0.75);
+      border: 1px solid var(--line);
+    }
+
+    .badge i {
+      color: var(--teal);
+      font-size: 0.72rem;
+    }
+
+    /* ---------- CARDS ---------- */
+    .card {
+      padding: 22px 18px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(12, 33, 53, 0.92), rgba(8, 23, 38, 0.96));
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.42);
+      margin-bottom: 18px;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(57, 213, 200, 0.18);
+    }
+
+    .card-head i {
+      color: var(--orange);
+      font-size: 1.05rem;
+    }
+
+    .card-head h2 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    /* ---------- SERVICES ---------- */
+    .service-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .service-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      background: rgba(7, 21, 35, 0.75);
+      border: 1px solid rgba(57, 213, 200, 0.16);
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #DCE9F7;
+    }
+
+    .service-item i {
+      color: var(--teal);
+      font-size: 0.95rem;
+      width: 18px;
+      text-align: center;
+      flex: 0 0 18px;
+    }
+
+    /* ---------- SERVICE AREA ---------- */
+    .area-intro {
+      font-size: 0.88rem;
+      color: var(--ice);
+      padding: 12px 14px;
+      border-radius: 14px;
+      border-left: 3px solid var(--orange);
+      background: rgba(7, 21, 35, 0.7);
+      margin-bottom: 16px;
+    }
+
+    .city-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .city-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--ice);
+      background: rgba(7, 21, 35, 0.78);
+      border: 1px solid rgba(57, 213, 200, 0.18);
+    }
+
+    .city-tag::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--teal);
+      flex: 0 0 5px;
+    }
+
+    .radius-note {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 16px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.79rem;
+      font-weight: 600;
+      color: #CFE2F2;
+      background: rgba(255, 122, 26, 0.08);
+      border: 1px solid var(--line-orange);
+    }
+
+    .radius-note i {
+      color: var(--orange);
+      font-size: 0.78rem;
+    }
+
+    /* ---------- CONTACT ---------- */
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: #E8F4FF;
+      background: rgba(7, 21, 35, 0.78);
+      border: 1px solid var(--line);
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .contact-row i {
+      font-size: 1.1rem;
+      color: var(--orange);
+      width: 24px;
+      text-align: center;
+      flex: 0 0 24px;
+    }
+
+    .contact-row .contact-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .contact-row .contact-sub {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    a.contact-row:hover,
+    a.contact-row:focus-visible {
+      border-color: var(--teal);
+      background: rgba(12, 33, 53, 0.95);
+    }
+
+    .contact-row.is-static {
+      cursor: default;
+    }
+
+    .contact-row.is-static i {
+      color: var(--teal);
+    }
+
+    /* ---------- FOOTER ---------- */
+    .site-footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(57, 213, 200, 0.16);
+      text-align: center;
+    }
+
+    .footer-brand {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    .footer-brand i {
+      color: var(--orange);
+      margin: 0 4px;
+    }
+
+    .footer-owner {
+      font-size: 0.78rem;
+      color: var(--teal);
+      margin-top: 8px;
+    }
+
+    .footer-legal {
+      font-size: 0.7rem;
+      color: #6E8AA0;
+      margin-top: 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .footer-cities {
+      font-size: 0.64rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #5C7690;
+      margin-top: 14px;
+      line-height: 1.8;
+    }
+
+    /* ---------- SMALL SCREENS ---------- */
+    @media (max-width: 380px) {
+      .wrapper {
+        padding: 20px 14px 36px;
+      }
+
+      .logo-mark {
+        width: 68px;
+        height: 68px;
+        flex-basis: 68px;
+      }
+
+      .brand h1 {
+        font-size: 1.55rem;
+      }
+
+      .brand .brand-sub {
+        font-size: 0.74rem;
+        letter-spacing: 0.26em;
+      }
+
+      .call-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 14px;
+        text-align: center;
+      }
+
+      .call-link {
+        justify-content: center;
+        font-size: 1.2rem;
+      }
+
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <!-- ============ HEADER ============ -->
+    <header class="site-header">
+      <svg class="logo-mark" viewBox="0 0 200 200" role="img" aria-label="RocketFix Mobile Repair logo">
+        <circle cx="100" cy="100" r="94" fill="#081726" stroke="#39D5C8" stroke-width="5"/>
+        <ellipse cx="100" cy="100" rx="78" ry="34" fill="none" stroke="#FF7A1A" stroke-width="2.5"
+                 opacity="0.55" transform="rotate(-18 100 100)"/>
+        <ellipse cx="100" cy="100" rx="88" ry="41" fill="none" stroke="#39D5C8" stroke-width="1.2"
+                 opacity="0.35" transform="rotate(-18 100 100)"/>
+        <g transform="translate(100 100) scale(0.72)">
+          <path d="M0 -70 C28 -40 28 18 0 48 C-28 18 -28 -40 0 -70 Z" fill="#FF7A1A"/>
+          <circle cx="0" cy="-28" r="12" fill="#071523" stroke="#39D5C8" stroke-width="5"/>
+          <path d="M-20 28 L-44 62 L-8 48 Z" fill="#39D5C8"/>
+          <path d="M20 28 L44 62 L8 48 Z" fill="#39D5C8"/>
+          <path d="M-14 46 L0 86 L14 46 Z" fill="#FFD166"/>
+          <path d="M-8 48 L0 70 L8 48 Z" fill="#FFFFFF" opacity="0.65"/>
+        </g>
+      </svg>
+
+      <div class="brand">
+        <h1>RocketFix</h1>
+        <div class="brand-sub">Mobile Repair</div>
+        <div class="brand-rule"></div>
+        <div class="brand-area">We come to you · Space Coast, FL</div>
+      </div>
+    </header>
+
+    <!-- ============ CALL BAR ============ -->
+    <div class="call-bar">
+      <span class="call-label">Call now</span>
+      <a href="tel:+13213231815" class="call-link">
+        <i class="fas fa-phone-alt" aria-hidden="true"></i> 321-323-1815
+      </a>
+    </div>
+
+    <!-- ============ TRUST BADGES ============ -->
+    <div class="badges">
+      <span class="badge"><i class="fas fa-check-circle" aria-hidden="true"></i> Same-day fix</span>
+      <span class="badge"><i class="fas fa-shield-alt" aria-hidden="true"></i> 90-day warranty</span>
+      <span class="badge"><i class="fas fa-car" aria-hidden="true"></i> We come to you</span>
+    </div>
+
+    <!-- ============ SERVICES ============ -->
+    <section class="card" aria-labelledby="services-heading">
+      <div class="card-head">
+        <i class="fas fa-tools" aria-hidden="true"></i>
+        <h2 id="services-heading">What we fix</h2>
+      </div>
+      <div class="service-grid">
+        <div class="service-item"><i class="fas fa-mobile-screen-button" aria-hidden="true"></i> Screen repair</div>
+        <div class="service-item"><i class="fas fa-battery-full" aria-hidden="true"></i> Battery swap</div>
+        <div class="service-item"><i class="fas fa-plug" aria-hidden="true"></i> Charging port</div>
+        <div class="service-item"><i class="fas fa-camera" aria-hidden="true"></i> Camera fix</div>
+        <div class="service-item"><i class="fas fa-water" aria-hidden="true"></i> Water damage</div>
+        <div class="service-item"><i class="fas fa-microchip" aria-hidden="true"></i> Board repair</div>
+      </div>
+    </section>
+
+    <!-- ============ SERVICE AREA ============ -->
+    <section class="card" aria-labelledby="area-heading">
+      <div class="card-head">
+        <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
+        <h2 id="area-heading">Service area</h2>
+      </div>
+
+      <p class="area-intro">
+        Merritt Island · Brevard County · all nearby cities within a 45-minute drive.
+      </p>
+
+      <div class="city-list">
+        <span class="city-tag">Merritt Island</span>
+        <span class="city-tag">Cocoa</span>
+        <span class="city-tag">Cocoa Beach</span>
+        <span class="city-tag">Cape Canaveral</span>
+        <span class="city-tag">Rockledge</span>
+        <span class="city-tag">Viera</span>
+        <span class="city-tag">Melbourne</span>
+        <span class="city-tag">Palm Bay</span>
+        <span class="city-tag">Titusville</span>
+        <span class="city-tag">Satellite Beach</span>
+        <span class="city-tag">Indialantic</span>
+        <span class="city-tag">Melbourne Beach</span>
+        <span class="city-tag">West Melbourne</span>
+        <span class="city-tag">Sharpes</span>
+        <span class="city-tag">Port St. John</span>
+        <span class="city-tag">Grant-Valkaria</span>
+        <span class="city-tag">Micco</span>
+        <span class="city-tag">Malabar</span>
+        <span class="city-tag">Palm Shores</span>
+      </div>
+
+      <div class="radius-note">
+        <i class="fas fa-clock" aria-hidden="true"></i>
+        45-minute drive from Merritt Island — we come to you.
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="contact-list" aria-label="Contact RocketFix Mobile Repair">
+      <a href="tel:+13213231815" class="contact-row">
+        <i class="fas fa-phone-volume" aria-hidden="true"></i>
+        <span>
+          <span class="contact-title">Call or text</span>
+          <span class="contact-sub">321-323-1815 · fast reply</span>
+        </span>
+      </a>
+
+      <a href="sms:+13213231815" class="contact-row">
+        <i class="fas fa-comment-dots" aria-hidden="true"></i>
+        <span>
+          <span class="contact-title">Text us</span>
+          <span class="contact-sub">Send a message — we'll get back ASAP</span>
+        </span>
+      </a>
+
+      <div class="contact-row is-static">
+        <i class="fas fa-location-dot" aria-hidden="true"></i>
+        <span>
+          <span class="contact-title">Brevard County &amp; 45-minute radius</span>
+          <span class="contact-sub">Merritt Island • Cocoa • Melbourne • Titusville &amp; more</span>
+        </span>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <i class="fas fa-rocket" aria-hidden="true"></i>
+        RocketFix Mobile Repair
+        <i class="fas fa-mobile-screen" aria-hidden="true"></i>
+      </div>
+
+      <div class="footer-owner">Benjamin Miller · Owner &amp; WISE Certified Technician</div>
+
+      <div class="footer-legal">
+        © 2025 RocketFix Mobile Repair · Brevard County, FL · Licensed &amp; insured · 321-323-1815
+      </div>
+
+      <div class="footer-cities">
+        Melbourne · Palm Bay · Merritt Island · Cocoa · Cocoa Beach · Titusville · Melbourne Beach
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
