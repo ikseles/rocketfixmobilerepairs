@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RocketFix Mobile Repair — Invoice</title>
+<style>
+  :root{
+    --navy-900:#071523; --navy-800:#0B2A45; --navy-700:#124A6A;
+    --teal:#39D5C8; --orange:#FF7A1A; --gold:#FFD166; --ice:#B9D6EA;
+    --line:rgba(57,213,200,.28); --line-o:rgba(255,122,26,.38);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:Arial,Helvetica,"Segoe UI",system-ui,sans-serif;
+    font-size:14px;line-height:1.45;color:#E8F4FF;
+    background:linear-gradient(160deg,var(--navy-900),var(--navy-800) 55%,var(--navy-700));
+    background-attachment:fixed;padding:24px 14px 60px;
+  }
+  .sheet{
+    max-width:840px;margin:0 auto;padding:30px 28px 26px;border-radius:20px;
+    background:rgba(8,23,38,.94);border:1px solid var(--line);
+    box-shadow:0 22px 50px rgba(0,0,0,.55);
+  }
+
+  /* ---------- HEADER ---------- */
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+        padding-bottom:18px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo-mark{width:74px;height:74px;flex:0 0 74px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5))}
+  .brand h1{font-size:1.6rem;font-weight:800;color:#fff;letter-spacing:.5px;line-height:1}
+  .brand .sub{font-size:.72rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+              color:var(--teal);margin-top:7px}
+  .brand .rule{width:190px;height:4px;border-radius:2px;background:var(--orange);margin:10px 0 8px}
+  .brand .area{font-size:.74rem;color:var(--ice)}
+  .doc-title{text-align:right;min-width:180px}
+  .doc-title h2{font-size:1.5rem;font-weight:800;letter-spacing:.28em;color:var(--gold);text-transform:uppercase}
+  .doc-title .tech{font-size:.72rem;color:var(--ice);margin-top:6px}
+
+  /* ---------- META ---------- */
+  .meta{display:grid;grid-template-columns:1fr 1fr;gap:16px 26px;margin:22px 0 6px}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:.66rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--teal)}
+  .field label.req::after{content:" *";color:var(--orange)}
+  .field input{
+    width:100%;padding:8px 10px;border-radius:8px;font:inherit;font-size:.86rem;
+    color:#E8F4FF;background:rgba(7,21,35,.8);
+    border:1px solid rgba(57,213,200,.22);outline:none;
+  }
+  .field input:focus{border-color:var(--orange)}
+  .field input::placeholder{color:#5C7690}
+  .field input.invalid{border-color:var(--orange);background:rgba(255,122,26,.08)}
+
+  /* ---------- TABLE ---------- */
+  .tbl-wrap{margin-top:22px;overflow-x:auto}
+  table.items{width:100%;border-collapse:collapse;min-width:560px}
+  table.items thead th{
+    font-size:.64rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--teal);text-align:left;padding:0 8px 10px;border-bottom:1px solid var(--line);
+  }
+  table.items thead th.c{text-align:center;width:46px}
+  table.items thead th.r{text-align:right;width:110px}
+  table.items tbody td{padding:9px 8px;border-bottom:1px solid rgba(57,213,200,.10);font-size:.86rem}
+  table.items tbody td.c{text-align:center}
+  table.items tbody td.r{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+  table.items tbody tr.on{background:rgba(57,213,200,.07)}
+  table.items tbody tr.on td.r{color:var(--gold)}
+  input[type=checkbox]{width:17px;height:17px;accent-color:var(--orange);cursor:pointer;vertical-align:middle}
+  .qty{width:52px;padding:5px 6px;border-radius:6px;text-align:center;font:inherit;font-size:.82rem;
+       color:#E8F4FF;background:rgba(7,21,35,.8);border:1px solid rgba(57,213,200,.22);outline:none}
+  .qty:focus{border-color:var(--orange)}
+  .price-input{width:92px;padding:5px 8px;border-radius:6px;text-align:right;font:inherit;font-size:.82rem;
+       color:#E8F4FF;background:rgba(7,21,35,.8);border:1px solid rgba(57,213,200,.22);outline:none}
+  .desc-input{width:100%;padding:5px 8px;border-radius:6px;font:inherit;font-size:.82rem;
+       color:#E8F4FF;background:rgba(7,21,35,.8);border:1px solid rgba(57,213,200,.22);outline:none}
+
+  /* ---------- DISCOUNT PANEL ---------- */
+  .discount-panel{
+    margin-top:20px;padding:14px 16px;border-radius:14px;
+    border:1px dashed var(--line-o);background:rgba(255,122,26,.06);
+    display:grid;grid-template-columns:150px 1fr;gap:12px 16px;align-items:end;
+  }
+  .discount-panel .dp-title{
+    grid-column:1 / -1;font-size:.64rem;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--orange);margin-bottom:2px;
+  }
+  .dp-field{display:flex;flex-direction:column;gap:4px}
+  .dp-field label{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+  .dp-field input{
+    width:100%;padding:7px 10px;border-radius:8px;font:inherit;font-size:.86rem;
+    color:#E8F4FF;background:rgba(7,21,35,.85);
+    border:1px solid rgba(57,213,200,.22);outline:none;
+  }
+  .dp-field input:focus{border-color:var(--orange)}
+  .dp-field input::placeholder{color:#5C7690}
+  .pct-wrap{position:relative}
+  .pct-wrap input{padding-right:28px;text-align:right}
+  .pct-wrap .pct{position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                 font-size:.78rem;font-weight:700;color:var(--gold);pointer-events:none}
+
+  /* ---------- TOTALS ---------- */
+  .totals{margin-top:20px;margin-left:auto;width:100%;max-width:340px;
+          border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(7,21,35,.7)}
+  .totals .row{display:flex;justify-content:space-between;padding:10px 16px;font-size:.86rem}
+  .totals .row span:last-child{font-variant-numeric:tabular-nums;font-weight:700}
+  .totals .row.sub{border-bottom:1px solid rgba(57,213,200,.14)}
+  .totals .row.disc{color:var(--orange)}
+  .totals .row.disc span:last-child{color:var(--orange)}
+  .totals .row.grand{background:rgba(255,122,26,.12);border-top:1px solid var(--line-o);
+                     font-size:1rem;font-weight:800;color:var(--gold)}
+  .totals .tax-breakdown{background:rgba(0,0,0,.18);padding:6px 0}
+  .totals .tax-breakdown .row{padding:5px 16px;font-size:.72rem;color:#8FA9BE;border:none}
+  .totals .tax-breakdown .row span:last-child{font-weight:600;color:#B9D6EA}
+
+  .tax-note{font-size:.68rem;color:#7E97AC;text-align:right;margin-top:8px;max-width:340px;margin-left:auto}
+
+  /* ---------- PAYMENT PANEL ---------- */
+  .payment-panel{
+    margin-top:22px;padding:16px 18px;border-radius:14px;
+    border:1px solid var(--line);background:rgba(7,21,35,.7);
+  }
+  .pay-title{
+    font-size:.64rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--teal);margin-bottom:14px;padding-bottom:10px;
+    border-bottom:1px solid rgba(57,213,200,.14);
+  }
+  .pay-block-label{
+    font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:#8FA9BE;margin-bottom:8px;
+  }
+  .pay-status,.pay-methods{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+  .pay-methods{margin-bottom:18px}
+  .pay-pill{position:relative;cursor:pointer;display:inline-flex}
+  .pay-pill input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+  .pay-pill span{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:7px 13px;border-radius:999px;font-size:.78rem;font-weight:600;
+    color:var(--ice);background:rgba(8,23,38,.85);
+    border:1px solid rgba(57,213,200,.20);transition:.15s;
+  }
+  .pay-pill span::before{
+    content:"";width:7px;height:7px;border-radius:50%;
+    background:#8FA9BE;flex:0 0 7px;
+  }
+  .pay-pill:hover span{border-color:rgba(57,213,200,.45)}
+  .pay-pill input:checked + span{
+    color:var(--gold);border-color:var(--orange);background:rgba(255,122,26,.12);
+  }
+  .pay-pill input:focus-visible + span{outline:2px solid var(--teal);outline-offset:2px}
+
+  /* brand dots */
+  .pay-pill span.pm-cash::before   {background:#3CB371}
+  .pay-pill span.pm-visa::before   {background:#1A1F71}
+  .pay-pill span.pm-mc::before     {background:#EB001B}
+  .pay-pill span.pm-amex::before   {background:#2E77BC}
+  .pay-pill span.pm-disc::before   {background:#FF6000}
+  .pay-pill span.pm-cashapp::before{background:#00D632}
+  .pay-pill span.pm-venmo::before  {background:#3D95CE}
+  .pay-pill span.pm-chime::before  {background:#1EC677}
+  .pay-pill span.pm-zelle::before  {background:#6D1ED4}
+
+  .pay-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .pay-fields .pf{display:flex;flex-direction:column;gap:4px}
+  .pay-fields label{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+  .pay-fields input{
+    width:100%;padding:7px 10px;border-radius:8px;font:inherit;font-size:.86rem;
+    color:#E8F4FF;background:rgba(7,21,35,.85);
+    border:1px solid rgba(57,213,200,.22);outline:none;
+  }
+  .pay-fields input:focus{border-color:var(--orange)}
+  .pay-fields input::placeholder{color:#5C7690}
+  .pay-fields input:disabled{opacity:.55;cursor:not-allowed}
+
+  .balance-line{
+    margin-top:14px;display:flex;justify-content:space-between;align-items:center;
+    padding:11px 16px;border-radius:10px;background:rgba(0,0,0,.22);
+    border:1px solid rgba(57,213,200,.14);font-size:.82rem;color:var(--ice);
+  }
+  .balance-line strong{color:var(--gold);font-size:1rem;font-variant-numeric:tabular-nums}
+
+  /* ---------- NOTES ---------- */
+  .notes{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);
+         display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .notes h3{font-size:.64rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+            color:var(--teal);margin-bottom:8px}
+  .notes p{font-size:.76rem;color:#A9C1D6;line-height:1.6}
+  .notes .sig{margin-top:26px;border-top:1px dashed rgba(57,213,200,.35);padding-top:8px;
+              font-size:.72rem;color:var(--ice)}
+
+  .footer{margin-top:24px;padding-top:14px;border-top:1px solid var(--line);
+          text-align:center;font-size:.66rem;color:#6E8AA0;letter-spacing:.06em}
+
+  /* ---------- ACTION BUTTONS ---------- */
+  .actions{max-width:840px;margin:0 auto 16px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+  .btn{padding:11px 22px;border-radius:999px;border:1px solid var(--line-o);cursor:pointer;
+       font:inherit;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+       color:var(--gold);background:rgba(8,23,38,.9);transition:.15s;
+       display:inline-flex;align-items:center;gap:8px}
+  .btn:hover{border-color:var(--orange);transform:translateY(-1px)}
+  .btn.ghost{color:var(--ice);border-color:var(--line)}
+  .btn.primary{background:linear-gradient(135deg,rgba(255,122,26,.18),rgba(57,213,200,.12));
+               border-color:var(--orange)}
+  .btn:disabled{opacity:.6;cursor:wait;transform:none}
+
+  /* ---------- TOAST ---------- */
+  .toast{
+    position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(120%);
+    padding:14px 22px;border-radius:12px;font-size:.86rem;font-weight:600;
+    background:rgba(8,23,38,.98);border:1px solid var(--teal);color:#E8F4FF;
+    box-shadow:0 12px 32px rgba(0,0,0,.6);z-index:1000;
+    transition:transform .28s ease, opacity .28s ease;opacity:0;max-width:90vw;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  .toast.err{border-color:var(--orange);color:#FFD9B8}
+  .toast.ok{border-color:var(--teal)}
+
+  @media (max-width:640px){
+    .sheet{padding:22px 16px}
+    .meta{grid-template-columns:1fr}
+    .notes{grid-template-columns:1fr}
+    .doc-title{text-align:left}
+    .discount-panel{grid-template-columns:1fr}
+    .pay-fields{grid-template-columns:1fr}
+    .totals{max-width:none}
+    .tax-note{max-width:none}
+    .actions{justify-content:center}
+  }
+</style>
+</head>
+<body>
+
+<div class="actions">
+  <button class="btn ghost" onclick="resetInvoice()">Reset</button>
+  <button class="btn ghost" onclick="copyInvoice()">Copy text</button>
+  <button class="btn primary" id="btnEmail" onclick="emailInvoice()">✉ Email invoice</button>
+</div>
+
+<div class="sheet">
+
+  <!-- HEADER -->
+  <div class="head">
+    <div class="brand">
+      <svg class="logo-mark" viewBox="0 0 200 200" role="img" aria-label="RocketFix logo">
+        <circle cx="100" cy="100" r="94" fill="#081726" stroke="#39D5C8" stroke-width="5"/>
+        <ellipse cx="100" cy="100" rx="78" ry="34" fill="none" stroke="#FF7A1A"
+                 stroke-width="2.5" opacity=".55" transform="rotate(-18 100 100)"/>
+        <ellipse cx="100" cy="100" rx="88" ry="41" fill="none" stroke="#39D5C8"
+                 stroke-width="1.2" opacity=".35" transform="rotate(-18 100 100)"/>
+        <g transform="translate(100 100) scale(.72)">
+          <path d="M0 -70 C28 -40 28 18 0 48 C-28 18 -28 -40 0 -70 Z" fill="#FF7A1A"/>
+          <circle cx="0" cy="-28" r="12" fill="#071523" stroke="#39D5C8" stroke-width="5"/>
+          <path d="M-20 28 L-44 62 L-8 48 Z" fill="#39D5C8"/>
+          <path d="M20 28 L44 62 L8 48 Z" fill="#39D5C8"/>
+          <path d="M-14 46 L0 86 L14 46 Z" fill="#FFD166"/>
+          <path d="M-8 48 L0 70 L8 48 Z" fill="#FFFFFF" opacity=".65"/>
+        </g>
+      </svg>
+      <div>
+        <h1>RocketFix</h1>
+        <div class="sub">Mobile Repair</div>
+        <div class="rule"></div>
+        <div class="area">We come to you · Space Coast, FL · 321-323-1815</div>
+      </div>
+    </div>
+
+    <div class="doc-title">
+      <h2>Invoice</h2>
+      <div class="tech">Benjamin Miller · Owner &amp; WISE Certified Technician</div>
+    </div>
+  </div>
+
+  <!-- META -->
+  <div class="meta">
+    <div class="field">
+      <label for="invNo">Invoice #</label>
+      <input id="invNo" placeholder="RF-0001">
+    </div>
+    <div class="field">
+      <label for="invDate">Date of service</label>
+      <input id="invDate" type="date">
+    </div>
+    <div class="field">
+      <label for="custName">Customer name</label>
+      <input id="custName" placeholder="Full name">
+    </div>
+    <div class="field">
+      <label for="custEmail" class="req">Customer email</label>
+      <input id="custEmail" type="email" placeholder="customer@example.com">
+    </div>
+    <div class="field">
+      <label for="custPhone">Customer phone</label>
+      <input id="custPhone" placeholder="321-555-0123">
+    </div>
+    <div class="field">
+      <label for="custDevice">Device(s) serviced</label>
+      <input id="custDevice" placeholder="e.g. iPhone 13, iPad Air">
+    </div>
+    <div class="field" style="grid-column:1/-1">
+      <label for="custLoc">Service location</label>
+      <input id="custLoc" placeholder="Street address, city">
+    </div>
+  </div>
+
+  <!-- LINE ITEMS -->
+  <div class="tbl-wrap">
+    <table class="items">
+      <thead>
+        <tr>
+          <th class="c">✓</th>
+          <th>Service performed</th>
+          <th class="c">Qty</th>
+          <th class="r">Price (tax incl.)</th>
+          <th class="r">Line total</th>
+        </tr>
+      </thead>
+      <tbody id="rows">
+        <tr data-price="150">
+          <td class="c"><input type="checkbox" aria-label="Screen Replacement iPhone"></td>
+          <td>Screen Replacement — iPhone (aftermarket)</td>
+          <td class="c"><input class="qty" type="number" min="1" value="1"></td>
+          <td class="r">$150.00</td>
+          <td class="r line">$0.00</td>
+        </tr>
+        <tr data-price="130">
+          <td class="c"><input type="checkbox" aria-label="Screen Replacement Android"></td>
+          <td>Screen Replacement — Android (standard)</td>
+          <td class="c"><input class="qty" type="number" min="1" value="1"></td>
+          <td class="r">$130.00</td>
+          <td class="r line">$0.00</td>
+        </tr>
+        <tr data-price="90">
+          <td class="c"><input type="checkbox" aria-label="Battery Replacement"></td>
+          <td>Battery Replacement</td>
+          <td class="c"><input class="qty" type="number" min="1" value="1"></td>
+          <td class="r">$90.00</td>
+          <td class="r line">$0.00</td>
+        </tr>
+        <tr data-price="180">
+          <td class="c"><input type="checkbox" aria-label="Charging Port Repair"></td>
+          <td>Charging Port Repair</td>
+          <td class="c"><input class="qty" type="number" min="1" value="1"></td>
+          <td class="r">$180.00</td>
+          <td class="r line">$0.00</td>
+        </tr>
+        <tr data-price="150">
+          <td class="c"><input type="checkbox" aria-label="Water Damage Treatment"></td>
+          <td>Water Damage Treatment</td>
+          <td class="c"><input class="qty" type="number" min="1" value="1"></td>
+          <td class="r">$150.00</td>
+          <td class="r line">$0.00</td>
+        </tr>
+        <tr data-price="80">
+          <td class="c"><input type="checkbox" aria-label="Software Diagnostics"></td>
+          <td>Software Diagnostics / Restore</td>
+          <td class="c"><input class="qty" type="number" min="1" value="1"></td>
+          <td class="r">$80.00</td>
+          <td class="r line">$0.00</td>
+        </tr>
+        <tr data-price="250">
+          <td class="c"><input type="checkbox" aria-label="Tablet Screen Replacement"></td>
+          <td>Tablet Screen Replacement</td>
+          <td class="c"><input class="qty" type="number" min="1" value="1"></td>
+          <td class="r">$250.00</td>
+          <td class="r line">$0.00</td>
+        </tr>
+        <tr data-price="140">
+          <td class="c"><input type="checkbox" aria-label="Tablet Battery Replacement"></td>
+          <td>Tablet Battery Replacement</td>
+          <td class="c"><input class="qty" type="number" min="1" value="1"></td>
+          <td class="r">$140.00</td>
+          <td class="r line">$0.00</td>
+        </tr>
+        <tr data-price="custom">
+          <td class="c"><input type="checkbox" aria-label="Other service"></td>
+          <td><input class="desc-input" placeholder="Other service — describe"></td>
+          <td class="c"><input class="qty" type="number" min="1" value="1"></td>
+          <td class="r"><input class="price-input" type="number" min="0" step="0.01" placeholder="0.00"></td>
+          <td class="r line">$0.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DISCOUNT PANEL -->
+  <div class="discount-panel">
+    <div class="dp-title">Discount</div>
+    <div class="dp-field">
+      <label for="discPct">Percentage off</label>
+      <div class="pct-wrap">
+        <input id="discPct" type="number" min="0" max="100" step="0.5" value="0">
+        <span class="pct">%</span>
+      </div>
+    </div>
+    <div class="dp-field">
+      <label for="discReason">Reason (optional)</label>
+      <input id="discReason" placeholder="e.g. Referral, returning customer, promotion">
+    </div>
+  </div>
+
+  <!-- TOTALS -->
+  <div class="totals">
+    <div class="row sub">
+      <span>Services total (tax incl.)</span>
+      <span id="gross">$0.00</span>
+    </div>
+
+    <div class="row disc" id="discRow" style="display:none">
+      <span>Discount (<span id="discPctLabel">0</span>%)</span>
+      <span id="discAmt">-$0.00</span>
+    </div>
+
+    <div class="row grand">
+      <span>Total due</span>
+      <span id="grand">$0.00</span>
+    </div>
+
+    <div class="tax-breakdown">
+      <div class="row"><span>Subtotal (pre-tax)</span><span id="subtotal">$0.00</span></div>
+      <div class="row"><span>Sales tax (7.0%)</span><span id="tax">$0.00</span></div>
+    </div>
+  </div>
+  <div class="tax-note">
+    All listed prices are tax-inclusive. Discounts reduce the taxable amount; tax is recalculated on the discounted total.
+  </div>
+
+  <!-- PAYMENT -->
+  <div class="payment-panel">
+    <div class="pay-title">Payment</div>
+
+    <div class="pay-block-label">Status</div>
+    <div class="pay-status">
+      <label class="pay-pill">
+        <input type="radio" name="payStatus" value="paid">
+        <span>Paid in full</span>
+      </label>
+      <label class="pay-pill">
+        <input type="radio" name="payStatus" value="partial">
+        <span>Partial payment</span>
+      </label>
+      <label class="pay-pill">
+        <input type="radio" name="payStatus" value="due" checked>
+        <span>Payment due</span>
+      </label>
+    </div>
+
+    <div class="pay-block-label">Method</div>
+    <div class="pay-methods">
+      <label class="pay-pill"><input type="radio" name="payMethod" value="Cash"><span class="pm-cash">Cash</span></label>
+      <label class="pay-pill"><input type="radio" name="payMethod" value="Visa"><span class="pm-visa">Visa</span></label>
+      <label class="pay-pill"><input type="radio" name="payMethod" value="Mastercard"><span class="pm-mc">Mastercard</span></label>
+      <label class="pay-pill"><input type="radio" name="payMethod" value="Amex"><span class="pm-amex">Amex</span></label>
+      <label class="pay-pill"><input type="radio" name="payMethod" value="Discover"><span class="pm-disc">Discover</span></label>
+      <label class="pay-pill"><input type="radio" name="payMethod" value="CashApp"><span class="pm-cashapp">CashApp</span></label>
+      <label class="pay-pill"><input type="radio" name="payMethod" value="Venmo"><span class="pm-venmo">Venmo</span></label>
+      <label class="pay-pill"><input type="radio" name="payMethod" value="Chime"><span class="pm-chime">Chime</span></label>
+      <label class="pay-pill"><input type="radio" name="payMethod" value="Zelle"><span class="pm-zelle">Zelle</span></label>
+    </div>
+
+    <div class="pay-fields">
+      <div class="pf">
+        <label for="amountPaid">Amount paid</label>
+        <input id="amountPaid" type="number" min="0" step="0.01" value="0.00" disabled>
+      </div>
+      <div class="pf">
+        <label for="payRef">Reference / confirmation #</label>
+        <input id="payRef" placeholder="e.g. Zelle memo, receipt #">
+      </div>
+    </div>
+
+    <div class="balance-line">
+      <span>Balance remaining</span>
+      <strong id="balanceDue">$0.00</strong>
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="notes">
+    <div>
+      <h3>Warranty</h3>
+      <p>Parts and workmanship are covered for 90 days from the service date. Warranty covers defects in the
+         part or installation only. It does not cover new physical damage, liquid damage occurring after
+         repair, or software issues unrelated to the repair.</p>
+      <p style="margin-top:10px">Questions? Call or text <strong>321-323-1815</strong>.</p>
+    </div>
+    <div>
+      <h3>Payment &amp; service</h3>
+      <p>Payment is due at time of service. Accepted: Cash, Visa, Mastercard, Amex, Discover, CashApp,
+         Venmo, Chime, Zelle. A written receipt with the warranty terms is provided at completion.</p>
+      <p style="margin-top:10px">Service performed at the customer's location by a WISE certified technician.</p>
+      <div class="sig">Customer signature</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    RocketFix Mobile Repair · Brevard County, FL · Licensed &amp; insured · 321-323-1815<br>
+    Melbourne · Palm Bay · Merritt Island · Cocoa · Cocoa Beach · Titusville · Melbourne Beach
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ============================================================
+     CONFIG — paste your deployed web app URL and shared secret
+     ============================================================ */
+  var WEB_APP_URL   = 'PASTE_DEPLOY_URL_HERE';       // ends in /exec
+  var SHARED_SECRET = 'PASTE_SHARED_SECRET_HERE';    // matches Code.gs
+
+  var TAX_RATE       = 0.07;
+  var BUSINESS_EMAIL = 'rocketfixmobilerepairs@gmail.com';
+
+  var STATUS_LABELS = { paid: 'Paid in full', partial: 'Partial payment', due: 'Payment due' };
+
+  function money(n){ return '$' + Number(n).toFixed(2); }
+  function parseMoney(s){ return parseFloat(String(s).replace(/[^0-9.\-]/g,'')) || 0; }
+
+  function getRows(){
+    return Array.prototype.slice.call(document.querySelectorAll('#rows tr'));
+  }
+
+  function rowPrice(row){
+    var pi = row.querySelector('.price-input');
+    if (pi) return parseFloat(pi.value) || 0;
+    return parseFloat(row.getAttribute('data-price')) || 0;
+  }
+
+  function rowLabel(row){
+    var di = row.querySelector('.desc-input');
+    if (di && di.value.trim()) return di.value.trim();
+    return row.querySelector('td:nth-child(2)').textContent.trim();
+  }
+
+  function selectedStatus(){
+    var el = document.querySelector('input[name="payStatus"]:checked');
+    return el ? el.value : 'due';
+  }
+
+  function selectedMethod(){
+    var el = document.querySelector('input[name="payMethod"]:checked');
+    return el ? el.value : '';
+  }
+
+  /* ---------------- RECALC ---------------- */
+  function recalc(){
+    var gross = 0;
+
+    getRows().forEach(function(row){
+      var cb = row.querySelector('input[type=checkbox]');
+      var qty = row.querySelector('.qty');
+      var q = parseInt(qty.value, 10);
+      if (isNaN(q) || q < 1) q = 1;
+
+      var line = cb.checked ? rowPrice(row) * q : 0;
+      row.querySelector('.line').textContent = money(line);
+      row.classList.toggle('on', cb.checked);
+      qty.disabled = !cb.checked;
+      gross += line;
+    });
+
+    /* Discount */
+    var discInput = document.getElementById('discPct');
+    var discPct = parseFloat(discInput.value) || 0;
+    if (discPct < 0)   { discPct = 0;   discInput.value = 0;   }
+    if (discPct > 100) { discPct = 100; discInput.value = 100; }
+
+    var discAmt  = gross * (discPct / 100);
+    var netTotal = gross - discAmt;
+    var subtotal = netTotal / (1 + TAX_RATE);
+    var tax      = netTotal - subtotal;
+
+    /* Payment */
+    var status   = selectedStatus();
+    var amtInput = document.getElementById('amountPaid');
+
+    if (status === 'paid') {
+      amtInput.value    = netTotal.toFixed(2);
+      amtInput.disabled = true;
+    } else if (status === 'due') {
+      amtInput.value    = '0.00';
+      amtInput.disabled = true;
+    } else {
+      amtInput.disabled = false;
+      var typed = parseFloat(amtInput.value);
+      if (isNaN(typed) || typed < 0) { typed = 0; }
+      if (typed > netTotal)          { typed = netTotal; amtInput.value = typed.toFixed(2); }
+    }
+
+    var paid    = parseFloat(amtInput.value) || 0;
+    var balance = Math.max(0, netTotal - paid);
+
+    /* Write to screen */
+    document.getElementById('gross').textContent        = money(gross);
+    document.getElementById('discPctLabel').textContent  = discPct % 1 === 0 ? discPct : discPct.toFixed(1);
+    document.getElementById('discAmt').textContent      = '-' + money(discAmt);
+    document.getElementById('grand').textContent        = money(netTotal);
+    document.getElementById('subtotal').textContent     = money(subtotal);
+    document.getElementById('tax').textContent          = money(tax);
+    document.getElementById('discRow').style.display    = discPct > 0 ? '' : 'none';
+    document.getElementById('balanceDue').textContent   = money(balance);
+  }
+
+  /* ---------------- BUILD PAYLOAD ---------------- */
+  function buildPayload(){
+    var lineItems = [];
+    getRows().forEach(function(row){
+      var cb = row.querySelector('input[type=checkbox]');
+      if (!cb.checked) return;
+      var q = parseInt(row.querySelector('.qty').value, 10) || 1;
+      var p = rowPrice(row);
+      lineItems.push({ label: rowLabel(row), qty: q, unitPrice: p, total: p * q });
+    });
+
+    var status = selectedStatus();
+
+    return {
+      secret:         SHARED_SECRET,
+      invoiceNo:      document.getElementById('invNo').value.trim() || 'UNASSIGNED',
+      invoiceDate:    document.getElementById('invDate').value || '',
+      customerName:   document.getElementById('custName').value.trim() || 'Customer',
+      customerEmail:  document.getElementById('custEmail').value.trim(),
+      customerPhone:  document.getElementById('custPhone').value.trim(),
+      device:         document.getElementById('custDevice').value.trim(),
+      location:       document.getElementById('custLoc').value.trim(),
+      lineItems:      lineItems,
+      discountPct:    parseFloat(document.getElementById('discPct').value) || 0,
+      discountReason: document.getElementById('discReason').value.trim(),
+      gross:          parseMoney(document.getElementById('gross').textContent),
+      discountAmt:    parseMoney(document.getElementById('discAmt').textContent),
+      netTotal:       parseMoney(document.getElementById('grand').textContent),
+      subtotal:       parseMoney(document.getElementById('subtotal').textContent),
+      tax:            parseMoney(document.getElementById('tax').textContent),
+      paymentStatus:  STATUS_LABELS[status] || 'Payment due',
+      paymentMethod:  selectedMethod(),
+      amountPaid:     parseFloat(document.getElementById('amountPaid').value) || 0,
+      paymentRef:     document.getElementById('payRef').value.trim(),
+      balanceDue:     parseMoney(document.getElementById('balanceDue').textContent)
+    };
+  }
+
+  /* ---------------- EMAIL ---------------- */
+  async function emailInvoice(){
+    var emailField = document.getElementById('custEmail');
+    var emailVal   = emailField.value.trim();
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailVal || !emailPattern.test(emailVal)) {
+      emailField.classList.add('invalid');
+      emailField.focus();
+      showToast('Please enter a valid customer email first.', true);
+      return;
+    }
+    emailField.classList.remove('invalid');
+
+    var anyChecked = getRows().some(function(r){
+      return r.querySelector('input[type=checkbox]').checked;
+    });
+    if (!anyChecked) {
+      showToast('Check at least one service before emailing.', true);
+      return;
+    }
+
+    if (!WEB_APP_URL || WEB_APP_URL.indexOf('PASTE') === 0) {
+      showToast('Endpoint not configured — using fallback email app.', true);
+      return mailtoFallback();
+    }
+
+    var btn = document.getElementById('btnEmail');
+    var original = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = 'Sending…';
+
+    try {
+      var payload = buildPayload();
+      var res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      var data;
+      try { data = await res.json(); }
+      catch (parseErr) {
+        var txt = await res.text().catch(function(){ return ''; });
+        throw new Error('Bad response: ' + txt.substring(0, 160));
+      }
+
+      if (data.ok) {
+        showToast('Invoice sent to ' + emailVal + ' — CC: ' + BUSINESS_EMAIL, false);
+      } else {
+        showToast('Server: ' + (data.error || 'unknown') + ' — using fallback.', true);
+        mailtoFallback();
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Connection failed — using fallback email app.', true);
+      mailtoFallback();
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = original;
+    }
+  }
+
+  /* ---------------- FALLBACK ---------------- */
+  function mailtoFallback(){
+    var emailVal = document.getElementById('custEmail').value.trim();
+    var invNo    = document.getElementById('invNo').value.trim() || 'invoice';
+    var name     = document.getElementById('custName').value.trim() || 'Customer';
+    var subject  = 'RocketFix Mobile Repair — Invoice ' + invNo + ' for ' + name;
+    var body     = buildInvoiceText();
+    var mailto   = 'mailto:' + encodeURIComponent(emailVal) +
+                   '?cc=' + encodeURIComponent(BUSINESS_EMAIL) +
+                   '&subject=' + encodeURIComponent(subject) +
+                   '&body=' + encodeURIComponent(body);
+    window.location.href = mailto;
+  }
+
+  /* ---------------- PLAIN TEXT ---------------- */
+  function buildInvoiceText(){
+    var invNo   = document.getElementById('invNo').value.trim() || '(unassigned)';
+    var invDate = document.getElementById('invDate').value || '(no date)';
+    var name    = document.getElementById('custName').value.trim() || '(no name)';
+    var email   = document.getElementById('custEmail').value.trim();
+    var phone   = document.getElementById('custPhone').value.trim() || '(none)';
+    var device  = document.getElementById('custDevice').value.trim() || '(not specified)';
+    var loc     = document.getElementById('custLoc').value.trim() || '(not specified)';
+    var reason  = document.getElementById('discReason').value.trim();
+
+    var items = [];
+    getRows().forEach(function(row){
+      if (!row.querySelector('input[type=checkbox]').checked) return;
+      var q = parseInt(row.querySelector('.qty').value, 10) || 1;
+      var p = rowPrice(row);
+      items.push({ label: rowLabel(row), qty: q, price: p, total: p * q });
+    });
+
+    var gross    = parseMoney(document.getElementById('gross').textContent);
+    var discPct  = parseFloat(document.getElementById('discPct').value) || 0;
+    var discAmt  = parseMoney(document.getElementById('discAmt').textContent);
+    var grand    = parseMoney(document.getElementById('grand').textContent);
+    var subtotal = parseMoney(document.getElementById('subtotal').textContent);
+    var tax      = parseMoney(document.getElementById('tax').textContent);
+
+    var status   = selectedStatus();
+    var method   = selectedMethod();
+    var amtPaid  = parseFloat(document.getElementById('amountPaid').value) || 0;
+    var payRef   = document.getElementById('payRef').value.trim();
+    var balance  = parseMoney(document.getElementById('balanceDue').textContent);
+
+    var L = [];
+    L.push('RocketFix Mobile Repair');
+    L.push('Brevard County, FL | 321-323-1815');
+    L.push(BUSINESS_EMAIL);
+    L.push('');
+    L.push('INVOICE ' + invNo);
+    L.push('Date: ' + invDate);
+    L.push('');
+    L.push('CUSTOMER');
+    L.push(name);
+    L.push((email || '(no email)') + ' | ' + phone);
+    L.push('Device: ' + device);
+    L.push('Location: ' + loc);
+    L.push('');
+    L.push('SERVICES PERFORMED');
+    L.push('----------------------------------------');
+    items.forEach(function(it){
+      L.push(it.label);
+      L.push('   x' + it.qty + ' @ ' + money(it.price) + ' = ' + money(it.total));
+    });
+    L.push('----------------------------------------');
+    L.push('Services total:       ' + money(gross));
+    if (discPct > 0) {
+      L.push('Discount (' + (discPct % 1 === 0 ? discPct : discPct.toFixed(1)) + '%' +
+             (reason ? ' - ' + reason : '') + '):  -' + money(discAmt));
+    }
+    L.push('TOTAL DUE:            ' + money(grand));
+    L.push('   Subtotal (pre-tax): ' + money(subtotal));
+    L.push('   Sales tax (7.0%):   ' + money(tax));
+    L.push('');
+    L.push('PAYMENT');
+    L.push('----------------------------------------');
+    L.push('Status:   ' + (STATUS_LABELS[status] || 'Payment due'));
+    L.push('Method:   ' + (method || '(not specified)'));
+    L.push('Paid:     ' + money(amtPaid));
+    if (payRef) L.push('Reference: ' + payRef);
+    L.push('Balance:  ' + money(balance));
+    L.push('');
+    L.push('Accepted payment: Cash, Visa, Mastercard, Amex, Discover,');
+    L.push('                  CashApp, Venmo, Chime, Zelle');
+    L.push('');
+    L.push('WARRANTY');
+    L.push('Parts and workmanship covered 90 days from service date.');
+    L.push('');
+    L.push('Thank you for choosing RocketFix Mobile Repair!');
+    return L.join('\r\n');
+  }
+
+  /* ---------------- COPY ---------------- */
+  function copyInvoice(){
+    var text = buildInvoiceText();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function(){
+        showToast('Invoice text copied — paste into an email or text.', false);
+      }).catch(function(){ fallbackCopy(text); });
+    } else { fallbackCopy(text); }
+  }
+
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast('Invoice text copied.', false); }
+    catch (e) { showToast('Copy failed — select manually.', true); }
+    document.body.removeChild(ta);
+  }
+
+  /* ---------------- TOAST ---------------- */
+  var toastTimer = null;
+  function showToast(msg, isError){
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + (isError ? 'err' : 'ok');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 6500);
+  }
+
+  /* ---------------- RESET ---------------- */
+  function resetInvoice(){
+    document.querySelectorAll('.field input, .dp-field input, .pay-fields input').forEach(function(i){ i.value = ''; });
+    document.getElementById('discPct').value = 0;
+    document.getElementById('amountPaid').value = '0.00';
+    document.querySelector('input[name="payStatus"][value="due"]').checked = true;
+    var method = document.querySelector('input[name="payMethod"]:checked');
+    if (method) method.checked = false;
+    getRows().forEach(function(row){
+      row.querySelector('input[type=checkbox]').checked = false;
+      row.querySelector('.qty').value = 1;
+      var pi = row.querySelector('.price-input');  if (pi) pi.value = '';
+      var di = row.querySelector('.desc-input');   if (di) di.value = '';
+    });
+    recalc();
+  }
+
+  document.addEventListener('input',  function(e){ if (e.target.matches('input')) recalc(); });
+  document.addEventListener('change', function(e){ if (e.target.matches('input')) recalc(); });
+
+  (function(){
+    var d = new Date();
+    document.getElementById('invDate').value =
+      d.getFullYear() + '-' +
+      String(d.getMonth()+1).padStart(2,'0') + '-' +
+      String(d.getDate()).padStart(2,'0');
+  })();
+
+  recalc();
+</script>
+</body>
+</html>
